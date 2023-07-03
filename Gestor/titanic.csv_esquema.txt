@@ -1,0 +1,1 @@
+PassengerId[int]#Survived[int]#Pclass[int]#Name[string]#Sex[string]#Age[string]#SibSp[int]#Parch[int]#Ticket[int]#Fare[string]#Cabin[float]#Embarked[string] 
