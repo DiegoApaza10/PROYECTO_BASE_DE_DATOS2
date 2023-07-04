@@ -1,3 +1,4 @@
+#include <iostream>
 template <typename T>
 class LinkedList {
 private:
@@ -67,7 +68,14 @@ public:
         head = nullptr;
         size = 0;
     }
-    
+    void mostrarNodos() const {
+        Node* current = head;
+        
+        while (current != nullptr) {
+            std::cout << current->data << std::endl;
+            current = current->next;
+        }
+    }
     int getSize() const {
         return size;
     }

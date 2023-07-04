@@ -7,7 +7,9 @@
 #include <sstream>
 #include <istream>
 #include <algorithm>
+#include <unordered_map>
 #include "clase_file.h"
+#include "Buffer_Buffer_Manager.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -27,6 +29,8 @@
 
 
 
+
+
 int main() {
 	
 	
@@ -35,17 +39,17 @@ int main() {
 	char nombreArchivo[20];
 	
     gestor.readCSV("titanic.csv","nuevo.txt",232);
-    std::cout << "Ingrese el nombre del archivo de texto: ";
+    std::cout << "Ingrese el nombre del archivo de texto: (INGRESAR nuevo.txt) ";
     std::cin.getline(nombreArchivo, 20);
     gestor.abrir_file(nombreArchivo);
- 	int opcion;
+    int opcion;
     do {
         // Mostrar el menú
         std::cout << "----- Menu -----" << std::endl;
-        std::cout << "1. Ejecutar meta_1" << std::endl;
-        std::cout << "2. Ejecutar Meta2" << std::endl;
-        std::cout << "3. Ejecutar Meta3" << std::endl;
-        std::cout << "4. Salir" << std::endl;
+        std::cout << "1. Ejecutar metadata general" << std::endl;
+        std::cout << "2. Ejecutar Metadata de un sector" << std::endl;
+        std::cout << "4. Buffer Manager" << std::endl;
+        std::cout << "5. Salir" << std::endl;
         std::cout << "----------------" << std::endl;
         std::cout << "Seleccione una opcion: ";
         std::cin >> opcion;
@@ -55,29 +59,77 @@ int main() {
             case 1:
                 gestor.meta_1();
                 break;
-            case 2:
+            case 3:
                 gestor.Meta2();
                 break;
-            case 3: {
+            case 2: {
                 int num;
                 std::cout << "Ingrese un numero: ";
                 std::cin >> num;
                 gestor.Meta3(num);
                 break;
             }
-            case 4:
+            case 4: {
+                int bufferSize;
+                std::cout << "Ingrese el tamanio del buffer: ";
+                std::cin >> bufferSize;
+
+                BufferManager bufferManager(bufferSize);
+
+                int opcionBuffer;
+                do {
+                    // Mostrar el menú del Buffer Manager
+                    std::cout << "----- Menu Buffer Manager -----" << std::endl;
+                    std::cout << "1. Solicitud de pagina" << std::endl;
+                    std::cout << "2. Mostrar pagina" << std::endl;
+                    std::cout << "3. Volver al menu principal" << std::endl;
+                    std::cout << "-------------------------------" << std::endl;
+                    std::cout << "Seleccione una opcion: ";
+                    std::cin >> opcionBuffer;
+
+                    switch (opcionBuffer) {
+                        case 1: {
+                            int numeroBloque;
+                            std::cout << "Ingrese el numero de bloque: ";
+                            std::cin >> numeroBloque;
+                            bufferManager.solicitud(numeroBloque);
+                            break;
+                        }
+                        case 2: {
+                            int numeroBloque;
+                            std::cout << "Ingrese el numero de bloque: ";
+                            std::cin >> numeroBloque;
+                            bufferManager.mostrarPagina(numeroBloque);
+                            break;
+                        }
+                        case 3:
+                            std::cout << "Volviendo al menu principal..." << std::endl;
+                            break;
+                        default:
+                            std::cout << "Opción invalida. Intente nuevamente." << std::endl;
+                            break;
+                    }
+
+                    std::cout << std::endl;
+                } while (opcionBuffer != 3);
+
+                break;
+            }
+            case 5:
                 std::cout << "Saliendo..." << std::endl;
                 break;
             default:
-                std::cout << "Opción invalida. Intente nuevamente." << std::endl;
+                std::cout << "Opción inválida. Intente nuevamente." << std::endl;
                 break;
         }
 
         std::cout << std::endl;
-    } while (opcion != 4);
+    } while (opcion != 5);
 
     return 0;
 }
-
+    
+    
+ 
 
 

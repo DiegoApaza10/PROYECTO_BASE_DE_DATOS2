@@ -50,7 +50,7 @@ class file{
 		void Meta2() {
 			for (int i = 0; i <= sectores; i++) {
 		        std::ostringstream nombreArchivoStream;
-		        nombreArchivoStream << "sector" << i << ".txt";
+		        nombreArchivoStream << "sectores/sector" << i << ".txt";
 		        std::string nombreArchivo = nombreArchivoStream.str();
 		
 		        std::cout << "Metadata del archivo " << nombreArchivo << ":" << std::endl;
@@ -72,7 +72,7 @@ class file{
 		}
 		void Meta3(int numSector) {
 	    	std::ostringstream nombreArchivoStream;
-		    nombreArchivoStream << "sector" << numSector << ".txt";
+		    nombreArchivoStream << "sectores/sector" << numSector << ".txt";
 		    std::string nombreArchivo = nombreArchivoStream.str();
 		
 		    std::cout << "Metadata del archivo " << nombreArchivo << ":" << std::endl;
@@ -82,8 +82,7 @@ class file{
 		
 		        std::ifstream archivo(nombreArchivo);
 		        if (archivo) {
-		            int numRegistros = std::count(std::istreambuf_iterator<char>(archivo),
-		                                          std::istreambuf_iterator<char>(), '\n');
+		            int numRegistros = std::count(std::istreambuf_iterator<char>(archivo), std::istreambuf_iterator<char>(), '\n');
 		            std::cout << "Numero de registros: " << numRegistros << std::endl;
 		
 		            archivo.clear();
