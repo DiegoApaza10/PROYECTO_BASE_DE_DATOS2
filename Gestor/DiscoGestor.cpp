@@ -9,23 +9,6 @@
 #include <algorithm>
 #include <unordered_map>
 #include "clase_file.h"
-#include "Buffer_Buffer_Manager.h"
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-/*
-    switch (dataType) {
-        case DataType::Integer:
-            std::cout << "El valor ingresado es un entero." << std::endl;
-            break;
-        case DataType::Float:
-            std::cout << "El valor ingresado es un flotante." << std::endl;
-            break;
-        case DataType::String:
-            std::cout << "El valor ingresado es una cadena." << std::endl;
-            break;
-    }
-*/
 
 
 
@@ -42,13 +25,15 @@ int main() {
     std::cout << "Ingrese el nombre del archivo de texto: (INGRESAR nuevo.txt) ";
     std::cin.getline(nombreArchivo, 20);
     gestor.abrir_file(nombreArchivo);
+    gestor.set_paginas();
     int opcion;
+    gestor.tree();
     do {
         // Mostrar el menú
         std::cout << "----- Menu -----" << std::endl;
         std::cout << "1. Ejecutar metadata general" << std::endl;
         std::cout << "2. Ejecutar Metadata de un sector" << std::endl;
-        std::cout << "4. Buffer Manager" << std::endl;
+        std::cout << "4. Obtener registro a traves del buffer (SELECT)" << std::endl;
         std::cout << "5. Salir" << std::endl;
         std::cout << "----------------" << std::endl;
         std::cout << "Seleccione una opcion: ";
@@ -70,51 +55,18 @@ int main() {
                 break;
             }
             case 4: {
-                int bufferSize;
-                std::cout << "Ingrese el tamanio del buffer: ";
-                std::cin >> bufferSize;
-
-                BufferManager bufferManager(bufferSize);
-
-                int opcionBuffer;
+                int num;
                 do {
-                    // Mostrar el menú del Buffer Manager
-                    std::cout << "----- Menu Buffer Manager -----" << std::endl;
-                    std::cout << "1. Solicitud de pagina" << std::endl;
-                    std::cout << "2. Mostrar pagina" << std::endl;
-                    std::cout << "3. Volver al menu principal" << std::endl;
-                    std::cout << "-------------------------------" << std::endl;
-                    std::cout << "Seleccione una opcion: ";
-                    std::cin >> opcionBuffer;
-
-                    switch (opcionBuffer) {
-                        case 1: {
-                            int numeroBloque;
-                            std::cout << "Ingrese el numero de bloque: ";
-                            std::cin >> numeroBloque;
-                            bufferManager.solicitud(numeroBloque);
-                            break;
-                        }
-                        case 2: {
-                            int numeroBloque;
-                            std::cout << "Ingrese el numero de bloque: ";
-                            std::cin >> numeroBloque;
-                            bufferManager.mostrarPagina(numeroBloque);
-                            break;
-                        }
-                        case 3:
-                            std::cout << "Volviendo al menu principal..." << std::endl;
-                            break;
-                        default:
-                            std::cout << "Opción invalida. Intente nuevamente." << std::endl;
-                            break;
+                    std::cout << "Ingrese un numero (o -1 para volver al menu): ";
+                    std::cin >> num;
+                    if (num != -1) {
+                        gestor.llamar_registro(num);
                     }
-
-                    std::cout << std::endl;
-                } while (opcionBuffer != 3);
-
+                } while (num != -1);
                 break;
             }
+            	
+            
             case 5:
                 std::cout << "Saliendo..." << std::endl;
                 break;
@@ -125,8 +77,14 @@ int main() {
 
         std::cout << std::endl;
     } while (opcion != 5);
+	
+	
+	
+	
 
+	
     return 0;
+
 }
     
     

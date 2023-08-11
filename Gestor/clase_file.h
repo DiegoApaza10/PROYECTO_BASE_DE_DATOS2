@@ -8,6 +8,10 @@
 #include <istream>
 #include <algorithm>
 #include "clase_disco.h"
+#include "b+tree.h"
+#include "Buffer_MANAGER_2.h"
+
+
 using namespace std;
 class Pagina {
 	private:
@@ -23,8 +27,53 @@ class file{
 		Pagina pagina;
 		int sectores;
 		int paginas;
+		
+		BPTree arbol;
+		ListaEnlazada Paginas;
+	
 	public:
+		BufferManager A = (4);
+		
+		void llamar_registro(int a)
+		{
+			Bloque* aux4;
+			Bloque* aux5;
+			bool existe = A.existeRegistroConBloqueID(a);
+			//cout<<endl<<existe<<endl;
+			Index* aux3 = buscar(a);
+			//cout<<"INSERTO"<< "AUX3 bloque: "<<aux3->sect<<" "<<aux3->ind<<endl;
+			if (existe ==  true){   
+				//cout<<"existe"<<endl;
+				cout<<aux3->sect<<endl;
+				aux4 = A.obtenerBloqueEnBufferFramePorID(aux3->sect);
+				Registro* b = aux4->obtenerRegistroPorId(a);
+				cout<<endl<<b->get_registro()<<endl;
+				
+				//aux4->mostrarContenido();
+			}else{
+				//cout<<"ENTRO";
+				aux5 = Paginas.obtenerBloquePorID(aux3->sect);
+				//cout<<aux5->get_id()<<endl;
+				//cout<<endl<<"CONTENIDO AUX5 "<<endl;
+				//aux5->mostrarContenido();
+				
+				A.insertar(aux5);
+				//cout<<"INSERTO EN ARBOL "<< "AUX3: "<<aux3->sect<<" "<<aux3->ind<<endl;
+				aux4 = A.obtenerBloqueEnBufferFramePorID(aux3->sect);
+				//cout<<endl<<"CONTENIDO AUX4 "<<endl;
+				Registro* b = aux4->obtenerRegistroPorId(a);
+				cout<<endl<<b->get_registro()<<endl;
+			
+			}
+			
+		}
+	
+	
+	
+	
+	
 		file() : disco(1000) {}
+		BPTree& retornar_arbol(){return arbol;}
 		int getFileSize(const std::string& filePath) {
 		    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
 		    if (!file) {
@@ -39,6 +88,41 @@ class file{
 		void abrir_file(const char* nombreArchivo){disco.abrirArchivoTxt(nombreArchivo);}
 		int sectores_c(){return disco.get_sector();} 
 		int tam_sec(){return disco.gettam_sector();}
+		void set_paginas(){Paginas = disco.retornar_bloque();}
+		void tree()
+		{
+		    Paginas = disco.retornar_bloque();
+		    Nodo *temp = Paginas.cabeza;
+		    while (temp != nullptr)
+		    {
+		        for (auto registroPtr : temp->bloque->registros_)
+		        {
+		            Registro *registro = registroPtr; 
+		            //cout<<endl<<registro->id_b<<" "<<registro->id_r;
+		            Index a;
+		            a.ind=registro->id_r;
+		            a.sect= registro->id_b;
+		            cout<<endl<<"INDEX: "<<a.ind<<" "<<a.sect<<endl;
+		            arbol.insert(a);
+		            //cout<<"entro \n";
+		            
+		    	}
+		        temp = temp->siguiente;
+		    }
+		   
+		}
+		
+		Index* buscar(int x)
+		{
+			cout<<"SE BUSCA "<<x<<endl;
+			Index aux;
+			Index *aux2;
+			aux.ind=x;
+			cout<<"AUX 1 : "<<aux.ind<<endl;
+			aux2 = arbol.search(aux);
+			cout<<endl<<aux2->ind<<" "<<aux2->sect<<endl;
+			return aux2;
+		}
 	///////////////////////////METADATA/////////////////////////////////////
 		void meta_1(){
 	        std::cout << "Informacion del disco duro:" << std::endl;
@@ -259,6 +343,14 @@ class file{
 		
 		    archivoCSV.close();
 		}
+////////////////////////////////
+		void mostrar_bloque(int a)
+		{
+			//disco.bloques_lista.mostrarContenidoPorID(a);
+			Paginas.mostrarContenidoPorID(a);
+		}
+		
+		
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		enum class DataType {
 		    Integer,
